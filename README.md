@@ -1,64 +1,212 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# Laravel API Project
 
-## About Laravel
+## Overview
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+This is a RESTful API built with Laravel, featuring user authentication using Laravel Sanctum, and CRUD operations on a `Transaction` resource. The API allows users to register, log in, and manage their own transactions.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- User Registration
+- User Login
+- Create and Read operations on Transactions
+- User-specific data access (transactions are linked to the authenticated user)
+- Secure API with token-based authentication using Sanctum
+- Logging and error handling
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Requirements
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- PHP >= 8.1
+- Composer
+- MySQL or SQLite (for local development)
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+## Setup Instructions
 
-### Premium Partners
+### 1. Clone the Repository
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+First, clone the repository to your local machine.
 
-## Contributing
+```bash
+git clone https://github.com/shahrozdaniel/cys_tech_r2_api.git
+cd cys_tech_r2_api
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 2. Install Dependencies
 
-## Code of Conduct
+Run the following command to install all PHP dependencies:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+composer install
+```
 
-## Security Vulnerabilities
+### 3. Create `.env` File
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Copy the example `.env` file and configure it for your local environment:
+
+```bash
+cp .env.example .env
+```
+
+### 4. Configure the Database
+
+In the `.env` file, configure your database settings:
+
+```ini
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=your_database_name
+DB_USERNAME=your_database_username
+DB_PASSWORD=your_database_password
+```
+
+If you're using SQLite, you can configure it like this:
+
+```ini
+DB_CONNECTION=sqlite
+DB_DATABASE=/path/to/database/database.sqlite
+```
+
+### 5. Generate Application Key
+
+Laravel requires an application key for encryption. Generate it by running the following command:
+
+```bash
+php artisan key:generate
+```
+
+### 6. Migrate the Database
+
+Run the database migrations to create the necessary tables (e.g., `users`, `transactions`, etc.):
+
+```bash
+php artisan migrate
+```
+
+### 7. Install Sanctum
+
+To use Laravel Sanctum for API authentication, install it and publish the Sanctum configuration:
+
+```bash
+composer require laravel/sanctum
+php artisan sanctum:install
+```
+
+Add the Sanctum middleware in `app/Http/Kernel.php`:
+
+```php
+'api' => [
+		\Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+		'throttle:api',
+		\Illuminate\Routing\Middleware\SubstituteBindings::class,
+],
+```
+
+Publish the Sanctum configuration:
+
+```bash
+php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
+```
+
+## Running the Application Locally
+
+### 1. Serve the Application
+
+To start the development server, run the following command:
+
+```bash
+php artisan serve
+```
+
+This will serve the application at `http://127.0.0.1:8000`.
+
+### 2. Access the API Endpoints
+
+Here are the key API endpoints available:
+
+- **POST `/api/register`** – Register a new user
+- **POST `/api/login`** – Login and receive an API token
+- **POST `/api/transactions`** – Create a new transaction
+- **GET `/api/transactions`** – Retrieve a list of transactions for the authenticated user
+- **GET `/api/transaction/{id}`** – Retrieve a specific transaction by ID
+
+To use these endpoints, include the API token in the `Authorization` header as a Bearer token after logging in.
+
+Example header for authentication:
+
+```bash
+Authorization: Bearer YOUR_API_TOKEN
+```
+
+---
+
+## Testing the API
+
+### 1. Test Registration
+
+Send a `POST` request to `/api/register` with the following JSON body:
+
+```json
+{
+		"name": "John Doe",
+		"email": "john@example.com",
+		"password": "password123"
+}
+```
+
+### 2. Test Login
+
+Send a `POST` request to `/api/login` with the following JSON body:
+
+```json
+{
+		"email": "john@example.com",
+		"password": "password123"
+}
+```
+
+The response will include an API token that you can use for subsequent requests.
+
+### 3. Test CRUD Operations for Transactions
+
+- **Create a transaction:**
+
+Send a `POST` request to `/api/transactions` with the following JSON body (authenticated):
+
+```json
+{
+		"title": "Transaction 1",
+		"description": "Description of transaction"
+}
+```
+
+- **Retrieve a list of transactions:**
+
+Send a `GET` request to `/api/transactions`.
+
+- **Retrieve a specific transaction by ID:**
+
+Send a `GET` request to `/api/transaction/{id}`.
+
+---
+
+## Additional Information
+
+- **API Authentication:** This project uses Laravel Sanctum for token-based authentication. You can use the token received during login in the `Authorization` header for all subsequent requests.
+- **Error Handling:** The API includes detailed error messages and appropriate HTTP status codes for edge cases (e.g., invalid credentials, missing data).
+
+---
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## Conclusion
+
+You can now run the Laravel API locally and interact with it using Postman or any other API testing tool. Make sure to follow the steps in the setup instructions to get everything working correctly.
