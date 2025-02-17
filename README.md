@@ -171,7 +171,7 @@ Send a `POST` request to `/api/login` with the following JSON body:
 
 The response will include an API token that you can use for subsequent requests.
 
-### 3. Test CRUD Operations for Transactions
+### 3. Test Create and Read Operations for Transactions
 
 - **Create a transaction:**
 
